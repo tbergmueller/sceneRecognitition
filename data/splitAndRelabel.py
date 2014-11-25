@@ -66,8 +66,6 @@ if len(mapping) != nrClassesInDb:
     exit(-1)
 
 
-
-
 shutil.rmtree(targetFolder, 1)
 
 mkdir_p(os.path.dirname(mappingFile))
