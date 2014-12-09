@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{listings}
 
 % Include other packages here, before hyperref.
 
@@ -58,8 +59,9 @@ Salzburg, Austria\\
 
 %%%%%%%%% BODY TEXT
 \section{Introduction}
+TODO
 
-\section{Data set and processing pipeline}
+\section{Data set}
 \label{sec:data}
 For testing, we employ the MIT indoor scene recognition database \cite{indoorScenes}. The authors in \cite{indoorScenes} already point out desireable results by comparing the performance of 
 \begin{itemize}
@@ -74,7 +76,29 @@ The structure of the data base allows to retrieve the ground truth, namely the c
 
 
 
-\section{Processing steps}
+\section{Processing pipeline}
+In order to classify scenes, we use the processing pipeline shown in figure \ref{fig:pipeline}. We propose the following structure to store data for exchange between the different steps of the pipeline:
+
+
+\begin{lstlisting}
+{
+	x,
+	targets,
+	class
+}
+\end{lstlisting}
+
+The x-field of the structure corresponds to the actual content of a data set. This could be RGB-values, Greyscale values, high- and low-level feature vectors or empty.
+
+\begin{figure}
+	\begin{center}
+		
+
+	\includegraphics[width=\textwidth]{img/pipeline}
+	\label{fig:pipeline}
+	\caption{Processing pipeline of test- and training-data}
+		\end{center}
+\end{figure}
 
 \subsection{Classifier}
 For classification, we use (as also in \cite{indoorScenes}) a support vector machine (SVM). The SVM is trained using the high-level features of the training data together with the class labelling retrieved from the file names, i.e. the folder name they are stored in, of the stored high-level features.
