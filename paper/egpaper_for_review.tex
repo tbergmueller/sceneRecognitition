@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{listings}
+\usepackage{url}
 
 % Include other packages here, before hyperref.
 
@@ -25,7 +26,7 @@
 \begin{document}
 
 %%%%%%%%% TITLE
-\title{\LaTeX\ Author Guidelines for ICB 2015 Proceedings [Based on CVPR]}
+\title{A framework for Indoor Scene recognition}
 
 \author{Thomas Bergmueller\\
 Authentic Vision, University of Salzburg\\
@@ -82,28 +83,79 @@ In order to classify scenes, we use the processing pipeline shown in figure \ref
 
 \begin{lstlisting}
 {
-	x,
+	fv,
 	targets,
 	class
 }
 \end{lstlisting}
 
-The x-field of the structure corresponds to the actual content of a data set. This could be RGB-values, Greyscale values, high- and low-level feature vectors or empty.
+Each row in x, targets and class corresponds to one data set entry, i.e. an image in the data set. Hence, the contents are row-vectors. We denote accessing the $i^{th}$ entry (row) of an field of the data structure $d$ as $d.field(i)$. 
+
+The targets-field contains the ground truth obtained from the data set's labelling. This is typically an integer number or string. The class-field contains the classifier-output, namely the decision the complete processing pipeline made. Therefore, the evaluation of the processing pipeline's performance on a test data set $d$ with $N \in \mathbb{N}$ images can easily be conducted by computing the rate of matches between targets and classification results (refer section \ref{sec:eval}).
+
+The \emph{fv}-field of the structure corresponds to the actual content of a data set, subsequently denoted as \emph{feature fector FV}. This could be high- and low-level feature vectors or empty. Note that the length of the FV has to be consistent throughout the rows.
+
 
 \begin{figure}
 	\begin{center}
 		
 
-	\includegraphics[width=\textwidth]{img/pipeline}
+	\includegraphics[width=\linewidth]{img/pipeline}
 	\label{fig:pipeline}
 	\caption{Processing pipeline of test- and training-data}
 		\end{center}
 \end{figure}
 
+
+In the following sections we discuss and document the different steps of the processing pipeline, which is shown in figure \ref{fig:pipeline}.
+
+\subsection{Low-level Feature Extraction}
+The low-level feature extraction individually loads the images of the test- and training-data sets, which have been created as described in section \ref{sec:data}. As soon as the $i^{th}$ image $I^{(i)}$ is loaded, the low-level featureExtraction $f_{LL}$ is applied on this image and the result, which is a feature row-vector of fixed length $L_{LL}$, is assigned to the structured data set's feature vector. The ground truth, which is retrieved from the filename of the image (denoted as class($I^{(i)}$) is stored in the structure's targets. This process is denoted as 
+
+\begin{small}
+
+\begin{eqnarray}
+d.fv(i) & = & f_{LL}(I^{(i)}) \quad \text{with} \quad f_{LL} \in \mathbb{R}^{1 \times L_{LL}} \\
+d.targets(i)& = &class((I^{(i)})
+\end{eqnarray}  
+
+\end{small}
+
+After this is done, the data is typically stored to the hard disk as Matlab .mat files. This has the advantage of avoiding to recompute the whole pipeline while developing a certain step of the processing pipeline. Besides Classification, Lowlevel feature extraction is usually the computationally most expensive part, because it processes the largest amount of data.
+\subsection{High-level Feature Extraction}
+
+Similar
+
 \subsection{Classifier}
-For classification, we use (as also in \cite{indoorScenes}) a support vector machine (SVM). The SVM is trained using the high-level features of the training data together with the class labelling retrieved from the file names, i.e. the folder name they are stored in, of the stored high-level features.
+For classification, we use (as also in \cite{indoorScenes}) a support vector machine (SVM). The SVM is trained using the high-level features of the training data together with the class labelling retrieved from the targets, i.e. $mySVM.train(traindata.targets, traindata.fv)$. After training, $testdata.class$ is assigned the result of the prediction process $svm.predict(testdata.fv)$. 
+
+Since SVMs are typically designed to solve two-class problems, we chose to use a MulticlassSVM. An implementation is available at Matlab's fileexchange\footnote{\url{http://www.mathworks.com/matlabcentral/fileexchange/39352-multi-class-svm}}. However, this implementation is really slow in training, especially for 67 classes. This is why we're looking for alternatives now.
+
+\subsection{Evaluation}
+\label{sec:eval}
+Evaluation of the data is straight forward. It is simply evaluated, to which extent the SVM-classification lead to the correct results. That is, where the $i^{th}$ $d.class(i)$ matches the ground truth $d.targets(i)$. Formally, the recognition rate, namely the correctly classified scenes, can be computed as 
+\begin{small}
+
+\begin{equation}
+	recognitionRate = \frac{1}{N} \sum_{i=1}^{N} \begin{cases}
+	1 \quad \text{if} \quad d.targets(i) = d.class(i)\\
+	0  \quad \text{else}
+	\end{cases}
+\end{equation}
+\end{small}
 
 
+Based on this processing pipeline, we evaluate different methods for Highlevel- and lowlevel feature extraction.
+
+\section{Methods}
+
+\subsection{Low-level features}
+
+\subsection{High-level features}
+
+\section{Results}
+
+\section{Conclusion}
 
 
 {\small
