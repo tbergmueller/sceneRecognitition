@@ -2,6 +2,10 @@ clear all;
 close all;
 clc;
 
+% for using libsvm
+% addpath C:\libsvm-3.20
+% addpath C:\libsvm-3.20\matlab
+
 
 %% FILENAMES
 llfTest = '../intermedResults/test.llf.mat';
@@ -13,7 +17,7 @@ classifiedTest = '../intermedResults/test.classified.mat';
 
 
 %% LL FeatureExtraction
-% Extract LowelevelFeatures
+% Extract Low Level features
 LLFE('../data/db/train/', llfTrain);
 LLFE('../data/db/test/', llfTest);
 

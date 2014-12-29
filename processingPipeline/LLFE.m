@@ -49,7 +49,10 @@ function [ data ] = LLFE( foldername_in, filename_out )
            
             % IMPORTANT NOTE: FeatureVector always has to have the same
             % size. Else the implementation does NOT work.
-           data.fv(curRowIndex,:) = densSiftExtractor(img);
+            % fv is a 3D matrix since we have more (by default 108) sift features per image.
+            % Therefore the third dimension corresponds to the 128
+            % dimensions of the sift features.
+           data.fv(curRowIndex,:,:) = densSiftExtractor(img);
            
            curRowIndex = curRowIndex + 1;
                      
