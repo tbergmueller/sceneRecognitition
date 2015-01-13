@@ -22,6 +22,10 @@ function [ data ] = LLFE( foldername_in, filename_out )
     curRowIndex = 1;
     
     
+    if(length(nameFolds) == 0)
+        error(['no input files for ' foldername_in]);
+    end
+    
     % for each folder
     for f = 1:length(nameFolds)
        
