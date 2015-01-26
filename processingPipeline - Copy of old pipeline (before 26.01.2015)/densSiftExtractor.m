@@ -1,4 +1,4 @@
-function [siftFeatures] = densSiftExtractor( image )
+function [siftFeatures] = LLFE_impl( image )
 %LLFE_IMPL 
 % This function calculates DSIFT features for the given image.
 % siftFeatures is a 2D matrix where the rows are the different features and
@@ -19,8 +19,7 @@ function [siftFeatures] = densSiftExtractor( image )
     % calculate DSIFT features (the resizing above ensures that we get
     % always 108 SIFT features for every image)
     
-    %[sift, gridX, gridY] = sp_dense_sift(im_res,32,32); % 108
-    [sift, gridX, gridY] = sp_dense_sift(im_res,24,24); % 192
+    [sift, gridX, gridY] = sp_dense_sift(im_res,32,32);
     siftFeatures = double(reshape(sift, [size(sift,1)*size(sift,2) size(sift,3)])); % bring sift features in 2D matrix
     
 end

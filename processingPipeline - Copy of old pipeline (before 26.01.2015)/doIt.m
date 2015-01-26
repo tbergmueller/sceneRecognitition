@@ -3,8 +3,8 @@ close all;
 clc;
 
 % for using libsvm
-addpath C:\libsvm-3.20
-addpath C:\libsvm-3.20\matlab
+% addpath C:\libsvm-3.20
+% addpath C:\libsvm-3.20\matlab
 
 
 %% FILENAMES
@@ -15,54 +15,24 @@ hlfTest = '../intermedResults/test.hlf.mat';
 hlfTrain = '../intermedResults/train.hlf.mat';
 classifiedTest = '../intermedResults/test.classified.mat';
 
+
 %% LL FeatureExtraction
 % Extract Low Level features
-LLFE('../data/db_small/train/', llfTrain);
-LLFE('../data/db_small/test/', llfTest);
+LLFE('../data/db/train/', llfTrain);
+LLFE('../data/db/test/', llfTest);
+
 
 %% HL FeatureExtraction
-%Extract High Level features
-HLFE(llfTrain, hlfTrain, llfTest, hlfTest);
+% Extract High Level features
+HLFE( llfTrain, hlfTrain);
+HLFE( llfTest, hlfTest);
 
 
 %% Classification
-[accuracy, dec_values] = classify(hlfTrain,hlfTest,classifiedTest)
+classify(hlfTrain,hlfTest,classifiedTest);
 
 %% Evaluation
 acc = evaluateAccuracy(classifiedTest);
 
 % Evaluation
 disp(['Recognition rate with this setting is ' num2str(acc)]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

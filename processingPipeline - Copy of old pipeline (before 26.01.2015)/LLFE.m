@@ -7,8 +7,6 @@ function [ data ] = LLFE( foldername_in, filename_out )
 %   This means, size of the loaded image has
 %   to be considered inside this function.
 
-    fprintf('\ncalculating DSIFT features...\n');
-
     d = dir(foldername_in);
     isub = [d(:).isdir]; %# returns logical vector
     nameFolds = {d(isub).name}';
@@ -23,6 +21,10 @@ function [ data ] = LLFE( foldername_in, filename_out )
     
     curRowIndex = 1;
     
+    
+    if(length(nameFolds) == 0)
+        error(['no input files for ' foldername_in]);
+    end
     
     % for each folder
     for f = 1:length(nameFolds)
@@ -69,7 +71,7 @@ function [ data ] = LLFE( foldername_in, filename_out )
     
     
     
-    fprintf('\nfinished!\n');
+    
    
 
 end
