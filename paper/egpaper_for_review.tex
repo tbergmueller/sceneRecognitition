@@ -4,6 +4,7 @@
 \usepackage{times}
 \usepackage{epsfig}
 \usepackage{graphicx}
+\usepackage{epstopdf}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{listings}
@@ -49,22 +50,16 @@ Salzburg, Austria\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-   The ABSTRACT is to be in fully-justified italicized text, at the top
-   of the left-hand column, below the author and affiliation
-   information. Use the word ``Abstract'' as the title, in 12-point
-   Times, boldface type, centered relative to the column, initially
-   capitalized. The abstract is to be in 10-point, single-spaced type.
-   Leave two blank lines after the Abstract, then begin the main text.
-   Look at previous ICB abstracts to get a feel for style and length.
+   In this paper, the open problem of Indoor scene recognition is being addressed. The framework implemented and tested regarding the acccuracy of classification was the Bag of Words model (BoW). The MIT indoor scene was used. Two Experiments were performed by testing the full dataset of 67 classes and also a smaller dataset of 11 classes, both from the MIT dataset.   
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
 \section{Introduction}
-TODO
+Indoor scene recognition is a challenging open problem in high level vision. Most scene recognition models that work well for outdoor scenes perform poorly in the indoor domain. The main difficulty is that while some indoor scenes can be well characterized by global spatial properties, others are better characterized by the objects they contain. More generally, to address the indoor scenes recognition problem there is a need to create a model that can exploit local and global discriminative information.\cite{indoorScenes} A model for image classification is to use bag of visual words (BoW). The steps for BoW model implemented were: feature representation with dense SIFT descriptors, codebook generation with quantisation of the descriptors with the k-means algorithm along with histogram computations. Furthermore training of a SVM and measurement of  the accuracy of correct classified test images was important for evaluation of the model.
 
 \section{Data set}
 \label{sec:data}
-For testing, we employ the MIT indoor scene recognition database \cite{indoorScenes}. The authors in \cite{indoorScenes} already point out desireable results by comparing the performance of 
+For testing, we employ the MIT indoor scene recognition database \cite{indoorScenes}. The authors in \cite{indoorScenes} already point out desirable results by observing the performance of 
 \begin{itemize}
 	\item Visual words with SIFT-Features
 	\item Gist features \cite{oliva06}, which is a content-based method and
@@ -73,7 +68,9 @@ For testing, we employ the MIT indoor scene recognition database \cite{indoorSce
 
 Along the database, the authors ship two text files, one, \emph{TrainImages.txt}, listing the pre-selected training data and another one, \emph{TestImages.txt}, listing the pre-selected test data. We stick to this pre-defined splitting of the data set since this ensures comparability with results found in literature. The data set contains a total of 15620 images showing 67 indoor scene categories. The data is structured in folders, where each folder represents one scene category. Interestingly, although the authors claim in \cite{indoorScenes} that the data set using these pre-selection files is partitioned resulting in 80 training images and 20 per class, we observe that although the total number of files ($67*(20+80) = 6700$) is correct, some classes in training and testing have an unexpected number of files, e.g. 79 for training or 23 for testing. Despite that, we stick to the proposed selection for the sake of comparable results.
 
-The structure of the data base allows to retrieve the ground truth, namely the category each image belongs to from the full path to a particular image. We employ an image processing pipeline, where we store results after each intermediate steps in a separate folder. Doing so, we take advantage of firstly being forced to create a sensible interface between the detection stages and secondly, we cut down on computation time in the development process when parts of just one step in the pipeline is changed. However, we change the labeling of the $C=67$ classes from alphanumeric to integer labeling to simplify processing with Matlab. Additionally, \cite{indoorScenes} suggests grouping into five large groups, Store, Home, Public spaces, leisure and Working place. We keep this as an option by training the SVM differently if need be, namely by mapping the class labels to the five categories.
+The structure of the data base allows to retrieve the ground truth, namely the category each image belongs to from the full path to a particular image. We employ an image processing pipeline, where we store results after each intermediate steps in a separate folder. Doing so, we take advantage of firstly being forced to create a sensible interface between the detection stages and secondly, we cut down on computation time in the development process when parts of just one step in the pipeline is changed. However, we change the labelling of the $C=67$ classes from alphanumeric to integer labelling to simplify processing with Matlab. Additionally, \cite{indoorScenes} suggests grouping into five large groups, Store, Home, Public spaces, leisure and Working place. We keep this as an option by training the SVM differently if need be, namely by mapping the class labels to the five categories.
+
+For further experiments the 67 indoor scene categories or classes were reduced to 11 categories by choosing 11 categories from the original MIT dataset. This dataset was made from 874 images for training and 226 for testing. The 11 scene categories were selected randomly.
 
 
 
@@ -100,7 +97,7 @@ The \emph{fv}-field of the structure corresponds to the actual content of a data
 	\begin{center}
 		
 
-	\includegraphics[width=\linewidth]{img/pipeline}
+	\includegraphics[width=\linewidth]{img/12.jpg}
 	\label{fig:pipeline}
 	\caption{Processing pipeline of test- and training-data}
 		\end{center}
@@ -123,13 +120,13 @@ d.targets(i)& = &class((I^{(i)})
 
 After this is done, the data is typically stored to the hard disk as Matlab .mat files. This has the advantage of avoiding to recompute the whole pipeline while developing a certain step of the processing pipeline. Besides Classification, Lowlevel feature extraction is usually the computationally most expensive part, because it processes the largest amount of data.
 \subsection{High-level Feature Extraction}
+The high-level feature extraction loads the feature vectors calculate in the previous section for the test and training datasets.
 
-Similar
 
 \subsection{Classifier}
 For classification, we use (as also in \cite{indoorScenes}) a support vector machine (SVM). The SVM is trained using the high-level features of the training data together with the class labelling retrieved from the targets, i.e. $mySVM.train(traindata.targets, traindata.fv)$. After training, $testdata.class$ is assigned the result of the prediction process $svm.predict(testdata.fv)$. 
 
-Since SVMs are typically designed to solve two-class problems, we chose to use a MulticlassSVM. An implementation is available at Matlab's fileexchange\footnote{\url{http://www.mathworks.com/matlabcentral/fileexchange/39352-multi-class-svm}}. However, this implementation is really slow in training, especially for 67 classes. This is why we're looking for alternatives now.
+Since SVMs are typically designed to solve two-class problems, we chose to use a MulticlassSVM. An implementation is available at Matlab's fileexchange\footnote{\url{http://www.mathworks.com/matlabcentral/fileexchange/39352-multi-class-svm}}. 
 
 \subsection{Evaluation}
 \label{sec:eval}
@@ -145,18 +142,66 @@ Evaluation of the data is straight forward. It is simply evaluated, to which ext
 \end{small}
 
 
-Based on this processing pipeline, we evaluate different methods for Highlevel- and lowlevel feature extraction.
+
 
 \section{Methods}
 
 \subsection{Low-level features}
+The calculation of the low features in this case  was implemented by calculating the Dense SIFT descriptors:
+\begin{itemize}
+   \item Feature Extraction with Dense SIFT \newline
+   Scale Invariant Feature Transform (SIFT) is an image descriptor for image-based matching and recognition developed by David Lowe (1999, 2004). The SIFT descriptor is invariant to translations, rotations and scaling transformations in the image domain and robust to moderate perspective transformations and illumination variations.[] The dense SIFT that we used was an modification of the SIFT descriptor such as a larger set of local image descriptors computed over a dense grid which usually provides more information than corresponding descriptors evaluated at a much sparser set of image points as described by Bosch et al. (2006, 2007). More specifically in the present case, when train and test images were loaded, they were normalised (resized to 300 x 400 or 400 x 300 depending on the image orientation). With our settings, the resulting DSIFT descriptors calculated were 192 per image and stored in a 3D matrix. The rows and columns represent respectively and the depth is  .  As low level features we defined at present the DSIFT descriptors.
+\end{itemize}
 
 \subsection{High-level features}
+The high level features were computed in 3 steps:
+\begin{itemize}
+   \item Loading of Low level Features 
+   \item Dictionary Creation by applying K-means \newline
+   Using the low features in the form of a 3D matrix was achieved by mapping the 3D matrix into a 2D matrix. We defined the number of features used for each image which were further on inserted for clustering. Clustering in this case is considered as encoding necessary for vector quantisation of the low features.  Clustering was performed by using K-means algorithm with the number of cluster centres being user defined. 10000 low level features were randomly selected and used.  
+     
+   \item Histogram Creation \newline
+   At this stage the histograms for train and test images were computed. Using the Euclidean distance, we calculated the distance of the visual words to every SIFT feature  for every image. Finally we computed the word frequencies occurring which essentially is the histogram.
+\end{itemize}
 
 \section{Results}
+Two experiments were performed. The first using the 11 classes MIT database with varying number of cluster centres and the second with full use of the MIT database of 67 classes with varying number of cluster centres. The aim of the experiment was to observe the behaviour of  the standard average multiclass prediction accuracy regarding classification. 
+\subsection{11-Classes Database}
+For the 11 class problem we used different values for the cluster centres k, The values used for k and the resulting classification accuracy is shown on table 1.
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+Cluster Centres & 50 & 100 & 300 & 600 & 1000 \\ \hline
+Accuracy & 18.27\% & 33.17\% & 49.52\% & 46.15\% & 43.75\%  \\ \hline
+\end{tabular}
+\end{table}
 
+\begin{figure}[h]
+      \centering
+      \includegraphics[width=0.7\linewidth]{img/11c.eps}
+      \caption{Cluster centres vs Accuracy}
+\end{figure}
+
+From figure 2, it was observed that for the entire dataset the accuracy ranged from 18.27\% to 49.52\%. The highest accuracy of 49.52\% was observed when the number of cluster centres was 300. Above 300 cluster centres, accuracy was decreasing to 46.15\% for 600 cluster centres, and to 43.75\% for 1500 centres. While it would be more accurate to specify more cluster centres, from  testing it seemed that the optimal accuracy was achieved at for 300 centres. This is due to the fact that the descriptor that were considered were randomly chosen. 
+
+\subsection{67-Classes Database}
+For the 67 class problem we used different values for the cluster centres k, The values used for k and the resulting classification accuracy used is shown on table 2.
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|}
+\hline
+Cluster Centres & 500 & 1000 & 1500 \\ \hline
+Accuracy & 18.35\% & 17.46\% & 13.3\% \\ \hline
+\end{tabular}
+\end{table}
+\begin{figure}[h]
+      \centering
+      \includegraphics[width=0.7\linewidth]{img/67c.eps}
+      \caption{Cluster centres vs Accuracy}
+\end{figure}
+From figure 3, it was observed that for the entire dataset the accuracy ranged from 13.3\% to 18.35\%. The highest accuracy of 18.35\% was observed when the number of cluster centres was 500. Above 500 cluster centres, accuracy was decreasing to 17.47\% for 1000 cluster centres and to 13.3\% for 1500 centres. The accuracy of classification was of low value. In this case the combination of many classes and the fact of randomise selection of the descriptors caused the misclassification.
 \section{Conclusion}
-
+The results from the the 67 classes were not satisfying due to the low rate of accuracy of classification observed justifying that the indoor scene recognition is still an open problem. Due to the high number of classes and that random number of descriptors were taken caused the accuracy to be not acceptable. Also for the 11-class dataset the observations were of higher value compared to the 67-class dataset.  
 
 {\small
 \bibliographystyle{ieee}
