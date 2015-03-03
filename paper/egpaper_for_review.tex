@@ -42,7 +42,7 @@ Salzburg, Austria\\
 Eleftherios Christopoulos, Martin Schnoell\\
 University of Salzburg\\
 Salzburg, Austria\\
-{\tt\small \{mschnoell, echristopoulos\}.aise-m2013@fh-salzburg.ac.at}
+{\tt\small \{martin.schnoell, eleftherios.christopoulos\}@stud.sbg.ac.at}
 }
 
 \maketitle
@@ -126,7 +126,7 @@ The high-level feature extraction loads the feature vectors calculate in the pre
 \subsection{Classifier}
 For classification, we use (as also in \cite{indoorScenes}) a support vector machine (SVM). The SVM is trained using the high-level features of the training data together with the class labelling retrieved from the targets, i.e. $mySVM.train(traindata.targets, traindata.fv)$. After training, $testdata.class$ is assigned the result of the prediction process $svm.predict(testdata.fv)$. 
 
-Since SVMs are typically designed to solve two-class problems, we chose to use a LIBSVM. An implementation is available at Matlab's fileexchange\footnote{\url{http://www.csie.ntu.edu.tw/~cjlin/liblinear}}. 
+Since SVMs are typically designed to solve two-class problems, we chose to use a LIBSVM which supports multi-class classification.\cite{Chang} An implementation is available online\footnote{\url{ttp://www.csie.ntu.edu.tw/~cjlin/libsvm}}. 
 
 \subsection{Evaluation}
 \label{sec:eval}
@@ -179,7 +179,7 @@ Accuracy & 18.27\% & 33.17\% & 49.52\% & 46.15\% & 43.75\%  \\ \hline
 
 \begin{figure}[h]
       \centering
-      \includegraphics[width=0.7\linewidth]{img/11c.eps}
+      \includegraphics[width=0.8\linewidth]{img/11c.eps}
       \caption{Cluster centres vs Accuracy}
 \end{figure}
 
@@ -202,11 +202,11 @@ Accuracy & 18.35\% & 17.46\% & 13.3\% \\ \hline
       \includegraphics[width=0.8\linewidth]{img/67c.eps}
       \caption{Cluster centres vs Accuracy}
 \end{figure}
-From figure 3, it was observed that for the entire dataset the accuracy ranged from 13.3\% to 18.35\%. The highest accuracy of 18.35\% was observed when the number of cluster centres was 500. Above 500 cluster centres, accuracy was decreasing to 17.47\% for 1000 cluster centres and to 13.3\% for 1500 centres.  It was also observed that we achieved an accuracy of 18.35\% as our best result which is lower compared to 24.47\% that was achieved by the authors in \cite{indoorScenes}. For that comparison, we found the average value of the multi-class accuracy of 67 scene categories individually and found the mean accuracy and compared with our value. 
+From figure 3, it was observed that for the entire dataset the accuracy ranged from 13.3\% to 18.35\%. The highest accuracy of 18.35\% was observed when the number of cluster centres was 500. Above 500 cluster centres, accuracy was decreasing to 17.47\% for 1000 cluster centres and to 13.3\% for 1500 centres.  It was also observed that we achieved an accuracy of 18.35\% as our best result which is lower compared to 27.7\% that was achieved by the authors in \cite{indoorScenes}. For that comparison, we found the average value of the multi-class accuracy of 67 scene categories individually and found the mean accuracy and compared with our value. 
 
 \section{Conclusion}
 We have shown that the processes implemented and followed for Bag of visual Words (BoW) failed to produce adequate results and therefore they performed poorly.
-The results from the 67  and 11 classes were not satisfying, achieving a maximum percentage of accuracy of 18.35\% and 49.52\% respectively. The low rate of accuracy of classification observed justifies that the indoor scene recognition is still an open problem. Our achieved accuracy was lower if compared to results from \cite{indoorScenes}  by 10\% in case of 67 scene categories.
+The results from the 67  and 11 classes were not satisfying, achieving a maximum percentage of accuracy of 18.35\% and 49.52\% respectively. The low rate of accuracy of classification observed justifies that the indoor scene recognition is still an open problem. Our achieved accuracy was lower if compared to results from \cite{indoorScenes}  by 9.35\% in case of 67 scene categories.
 {\small
 \bibliographystyle{ieee}
 \bibliography{egbib}
